@@ -1,0 +1,14 @@
+# No external dependencies required!
+# This project uses only Python standard library:
+# - argparse
+# - csv
+# - re
+# - sys
+# - pathlib
+# - typing
+# - unittest (for tests)
+# - tempfile (for tests)
+
+# Optional: For running tests with pytest instead of unittest
+# pytest>=6.0.0
+# pytest-cov>=2.10.0
