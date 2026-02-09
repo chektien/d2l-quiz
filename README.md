@@ -170,7 +170,7 @@ Feedback,"Explanation of correct answer",,,
 
 - **HTML Rendering**: D2L instances vary in HTML support. The script adds `HTML` indicator column when HTML tags are present, but rendering behavior may differ.
 - **Code Syntax Highlighting**: The script preserves code formatting with monospace fonts and background colors, but language-specific syntax highlighting is not supported in D2L CSV imports.
-- **Images**: Image references must be manually uploaded to D2L after import.
+- **Images**: Images referenced in quiz questions (e.g., `![alt](image.png)`) are **not included** in the CSV export due to limitations of the D2L CSV import format. After importing the CSV into D2L, you must manually upload all images to the D2L question library and re-link them in each question.
 
 ## Compatibility
 
