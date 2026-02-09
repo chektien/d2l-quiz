@@ -223,6 +223,57 @@ The test suite covers:
 - **Clear Naming**: Test names describe what they test
 - **Documentation**: Docstrings explain the purpose of each test class
 
+## Examena Proctoring Setup Guide
+
+If your institution uses [Examena](https://www.examena.com/) for online proctoring, this section will help you configure it alongside your D2L quizzes.
+
+> This guide is derived from Examena's instructor documentation with additional practical notes from real-world usage.
+
+### Prerequisites
+
+- A D2L Brightspace (xSITe or equivalent) course with a quiz already created
+- Examena instructor access (provided by your institution)
+- **Important**: On macOS, use **Chrome** to create Examena proctoring activities. Safari does not load the quiz configuration properly when creating an Examena activity from the D2L Content page.
+
+### Creating an Examena-Proctored Quiz
+
+1. In your D2L course, go to **Content** and create a new module (or select an existing one)
+2. Click **Add Existing Activities** > **External Learning Tools** > **Examena**
+3. Configure the Examena activity with your quiz settings (duration, allowed resources, etc.)
+
+### Configuring Allowed Domains
+
+The Examena "Authorized Resources" configuration has two fields that serve different purposes:
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| **URL** (top field, with Name) | The display link students see and click in the exam interface -- the "front door" | `https://github.com/sit-dia/dia-notes` |
+| **Authorized address to redirect** (bottom field) | The security whitelist controlling which URLs students can visit after clicking -- the "allowed rooms" | `https://github.com/sit-dia/dia-notes/**` |
+
+**How they work together:**
+
+1. Student clicks the named link (e.g., "Class notes on GitHub") in the exam interface
+2. Browser opens the top URL (e.g., `https://github.com/sit-dia/dia-notes`)
+3. Student can navigate within the authorized address pattern (e.g., `https://github.com/sit-dia/dia-notes/chapter1/notes.md`)
+4. Any attempt to navigate outside the authorized pattern (e.g., `https://github.com/other-repo`) is **blocked**
+
+**Key rules:**
+
+- Do **NOT** put `/**` wildcards in the top URL field -- keep the fields separate
+- The top URL should be an exact, clean URL (the entry point)
+- The bottom field supports wildcards (`/**`) to allow sub-page navigation
+- Add multiple authorized addresses if students need access to different domains (e.g., GitHub + course notes site)
+
+### Example Configuration
+
+To allow students to access class notes on GitHub during a quiz:
+
+- **Name**: "Class notes on GitHub"
+- **URL** (top): `https://github.com/sit-dia/dia-notes`
+- **Authorized address** (bottom): `https://github.com/sit-dia/dia-notes/**`
+
+This lets students browse all pages under `dia-notes` but blocks access to any other GitHub repository.
+
 ## License
 
 MIT License - Feel free to modify for your institution's needs.
