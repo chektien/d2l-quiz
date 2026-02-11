@@ -172,6 +172,16 @@ Feedback,"Explanation of correct answer",,,
 - **Code Syntax Highlighting**: The script preserves code formatting with monospace fonts and background colors, but language-specific syntax highlighting is not supported in D2L CSV imports.
 - **Images**: Images referenced in quiz questions (e.g., `![alt](image.png)`) are **not included** in the CSV export due to limitations of the D2L CSV import format. After importing the CSV into D2L, you must manually upload all images to the D2L question library and re-link them in each question.
 
+## xSITe Quiz Editing UX Notes
+
+If you're editing quizzes on SIT's xSITe (D2L Brightspace), be aware of these interface quirks:
+
+1. **Quiz link may not appear immediately**: After adding a quiz to a module's Content section, the quiz link sometimes doesn't show up until you do a hard refresh in Chrome (Cmd+Shift+R / Ctrl+Shift+R). Even clearing the browser cache may not help -- a full page refresh is often needed.
+
+2. **Confusing default edit view**: When you click "Edit" on a quiz from the Content page, D2L opens what looks like the default xSITe quiz editing interface. This view has empty availability/timing settings and limited editing capabilities. This is **not** the full quiz editor.
+
+3. **Must use "Open in New Window" for Examena quizzes**: To reach the actual Examena editing interface (where you can configure proctoring settings, manage questions, etc.), you must click the **"Open in New Window"** button/link within the quiz. The inline editing view does not expose the full Examena configuration.
+
 ## Compatibility
 
 - Python 3.6+

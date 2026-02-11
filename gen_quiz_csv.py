@@ -88,7 +88,7 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
         if correct_match:
             answer_text = correct_match.group(1).strip()
             # Extract letters (A, B, C, D, etc.) - only single capital letters followed by . or ,
-            letter_match = re.findall(r"\b([A-F])(?:\.|,|\s|$)", answer_text)
+            letter_match = re.findall(r"\b([A-G])(?:\.|,|\s|$)", answer_text)
             correct_letters = letter_match if letter_match else []
 
             # For short answer questions (no letters), store the answer text separately
@@ -106,7 +106,7 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
             continue
 
         # Parse option lines: A. option text, B. option text, etc.
-        option_match = re.match(r"^([A-F])\.\s*(.+)$", stripped)
+        option_match = re.match(r"^([A-G])\.\s*(.+)$", stripped)
         if option_match:
             letter = option_match.group(1)
             text = option_match.group(2).strip()
