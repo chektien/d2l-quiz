@@ -63,15 +63,22 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
             code_block_content.append(line)
             continue
 
-        # Skip empty lines and separators
-        if not stripped or stripped == "---":
+        # Skip separator lines but preserve empty lines for paragraph breaks
+        if stripped == "---":
+            continue
+
+        # Handle empty lines - preserve them as paragraph breaks
+        if not stripped:
+            question_text_lines.append("")
             continue
 
         # Parse question header: ## Topic or ## Topic: Subtopic
         # Format: "## RV Continuum: World Knowledge" or "## Implementation: npm Scripts"
+        # Note: Headers are used to separate questions but titles are NOT extracted
+        # to keep the xSite short description field empty
         header_match = re.match(r"^##\s*(.+)$", stripped)
         if header_match:
-            title = header_match.group(1).strip()
+            # Skip the header line - don't use it as title
             continue
 
         # Check for short answer indicator
@@ -113,8 +120,15 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
             options.append({"letter": letter, "text": text, "correct": False})
             continue
 
-        # Skip reference lines and other metadata
+        # Include reference lines in question text (converted to italic)
         if stripped.startswith("*Reference:") or stripped.startswith("*Note:"):
+            # Convert markdown italic to HTML italic
+            ref_text = stripped
+            if ref_text.startswith("*") and ref_text.endswith("*"):
+                ref_text = ref_text[
+                    1:-1
+                ]  # Remove asterisks for now, will be processed later
+            question_text_lines.append(ref_text)
             continue
 
         # Accumulate question text
@@ -232,6 +246,9 @@ def format_question_text(text: str) -> str:
 
     # Convert markdown bold **text** to HTML <strong>
     result = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", result)
+
+    # Convert markdown italic *text* to HTML <em> (but not already processed bold)
+    result = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<em>\1</em>", result)
 
     # Convert inline code `code` to HTML <code>
     result = re.sub(r"`([^`]+)`", r"<code>\1</code>", result)
