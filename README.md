@@ -174,13 +174,19 @@ Feedback,"Explanation of correct answer",,,
 
 ## xSITe Quiz Editing UX Notes
 
-If you're editing quizzes on SIT's xSITe (D2L Brightspace), be aware of these interface quirks:
+> **Note**: This section is not about what this tool's code does. These are practical tips for instructors who need to work with Examena after importing a quiz into xSITe.
 
-1. **Quiz link may not appear immediately**: After adding a quiz to a module's Content section, the quiz link sometimes doesn't show up until you do a hard refresh in Chrome (Cmd+Shift+R / Ctrl+Shift+R). Even clearing the browser cache may not help -- a full page refresh is often needed.
+If you're editing Examena quizzes on SIT's xSITe (D2L Brightspace), be aware of these interface quirks:
 
-2. **Confusing default edit view**: When you click "Edit" on a quiz from the Content page, D2L opens what looks like the default xSITe quiz editing interface. This view has empty availability/timing settings and limited editing capabilities. This is **not** the full quiz editor.
+1. **Items may be collapsed in Unit sections**: In the Content page, items within a "Unit" section may be folded/collapsed by default. You may not see the quiz link and think quizzes are missing -- expand the Unit section to reveal the items.
+
+2. **Do NOT edit availability settings in the default edit view**: When you click "Edit" on a quiz from the Content page, D2L opens what looks like the default xSITe quiz editing interface. This view confusingly has availability/timing settings that appear empty. Do **not** edit these settings here -- they do not match the actual Examena quiz settings and changing them can cause confusion. This is **not** the full quiz editor.
 
 3. **Must use "Open in New Window" for Examena quizzes**: To reach the actual Examena editing interface (where you can configure proctoring settings, manage questions, etc.), you must click the **"Open in New Window"** button/link within the quiz. The inline editing view does not expose the full Examena configuration.
+
+4. **Both xSITe and Examena items must be visible**: For students to access the quiz properly, both the xSITe content item and the Examena activity must be set as visible. If either is hidden, students will not be able to reach the quiz.
+
+5. **Students must launch Examena from xSITe**: Students should **not** try to log in to Examena independently -- it will not work. They must click on the Examena item link from xSITe to launch the quiz in Examena. Direct login to the Examena site is not supported for student access.
 
 ## Compatibility
 
