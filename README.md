@@ -2,7 +2,7 @@
 
 A Python tool to convert quiz questions from Markdown format to D2L Brightspace CSV import format.
 
-> ⚠️ **Note**: Originally developed for **Singapore Institute of Technology (SIT)'s xSITe LMS** platform. While it follows D2L Brightspace CSV format standards, some features (like HTML handling) may behave differently on other D2L instances. Use with caution and test thoroughly on your specific LMS.
+> **Note**: Originally developed for **Singapore Institute of Technology (SIT)'s xSITe LMS** platform. While it follows D2L Brightspace CSV format standards, some features (like HTML handling) may behave differently on other D2L instances. Use with caution and test thoroughly on your specific LMS.
 
 ## Features
 
@@ -180,7 +180,7 @@ If your institution uses [Examena](https://www.examena.com/) for online proctori
 
 ### Prerequisites
 
-- A D2L Brightspace (xSITe or equivalent) course with a quiz already created
+- A D2L Brightspace course with a quiz already created
 - Examena instructor access (provided by your institution)
 - **Important**: On macOS, use **Chrome** to create Examena proctoring activities. Safari does not load the quiz configuration properly when creating an Examena activity from the D2L Content page.
 
