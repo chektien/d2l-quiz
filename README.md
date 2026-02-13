@@ -172,21 +172,76 @@ Feedback,"Explanation of correct answer",,,
 - **Code Syntax Highlighting**: The script preserves code formatting with monospace fonts and background colors, but language-specific syntax highlighting is not supported in D2L CSV imports.
 - **Images**: Images referenced in quiz questions (e.g., `![alt](image.png)`) are **not included** in the CSV export due to limitations of the D2L CSV import format. After importing the CSV into D2L, you must manually upload all images to the D2L question library and re-link them in each question.
 
-## xSITe Quiz Editing UX Notes
+## Examena Proctoring Setup Guide
 
-> **Note**: This section is not about what this tool's code does. These are practical tips for instructors who need to work with Examena after importing a quiz into xSITe.
+> **Note**: This section does not describe the tool's code. It provides practical tips for instructors who need to configure Examena after importing a quiz into xSITe. The guide is derived from Examena's instructor documentation, supplemented with notes from real-world usage.
 
-If you're editing Examena quizzes on SIT's xSITe (D2L Brightspace), be aware of these interface quirks:
+If your institution uses [Examena](https://www.examena.com/) for online proctoring, this section will help you configure it alongside your D2L quizzes.
 
-1. **Items may be collapsed in Unit sections**: In the Content page, items within a "Unit" section may be folded/collapsed by default. You may not see the quiz link and think quizzes are missing -- expand the Unit section to reveal the items.
+### Prerequisites
 
-2. **Do NOT edit availability settings in the default edit view**: When you click "Edit" on a quiz from the Content page, D2L opens what looks like the default xSITe quiz editing interface. This view confusingly has availability/timing settings that appear empty. Do **not** edit these settings here -- they do not match the actual Examena quiz settings and changing them can cause confusion. This is **not** the full quiz editor.
+- A D2L Brightspace (xSITe or equivalent) course with a quiz already created
+- Examena instructor access (provided by your institution)
+- **Important**: On macOS, use **Chrome** to create Examena proctoring activities. Safari does not load the quiz configuration properly when creating an Examena activity from the D2L Content page.
 
-3. **Must use "Open in New Window" for Examena quizzes**: To reach the actual Examena editing interface (where you can configure proctoring settings, manage questions, etc.), you must click the **"Open in New Window"** button/link within the quiz. The inline editing view does not expose the full Examena configuration.
+### Creating an Examena-Proctored Quiz
 
-4. **Both xSITe and Examena items must be visible**: For students to access the quiz properly, both the xSITe content item and the Examena activity must be set as visible. If either is hidden, students will not be able to reach the quiz.
+1. Create the quiz in D2L as usual (e.g., using this repo's markdown-to-CSV tool to generate and import the CSV).
+2. Ensure the quiz is **password protected** -- Examena requires this, and it adds a security layer to prevent students from accessing the quiz outside of Examena.
+3. Switch to student view in D2L and manually copy the quiz URL from **Assessments > Quizzes > [Your Quiz Name]**. This is an unintuitive but necessary step.
+4. In your D2L course, go to **Content** and create a new module (or select an existing one).
+5. Click **Add Existing Activities** > **External Learning Tools** > **Examena Proctoring**.
+6. Configure the Examena activity with your quiz settings (duration, allowed resources, etc.). Note that this step may fail on unsupported browsers such as Safari. Key configuration points:
+   - Paste the quiz URL from step 3 into the **"Exam URL for student"** field.
+   - Enter the same password from the D2L quiz into the **"Access Code"** field (note the different field name).
+   - Set more attempts in Examena than in D2L to avoid students being locked out of Examena if issues occur.
 
-5. **Students must launch Examena from xSITe**: Students should **not** try to log in to Examena independently -- it will not work. They must click on the Examena item link from xSITe to launch the quiz in Examena. Direct login to the Examena site is not supported for student access.
+### Configuring Allowed Domains
+
+The Examena "Authorized Resources" configuration has two fields that serve different purposes:
+
+| Field | Purpose | Example |
+|-------|---------|---------|
+| **URL** (top field, with Name) | The display link students see and click in the exam interface -- the "front door" | `https://github.com/sit-dia/dia-notes` |
+| **Authorized address to redirect** (bottom field) | The security whitelist controlling which URLs students can visit after clicking -- the "allowed rooms" | `https://github.com/sit-dia/dia-notes/**` |
+
+**How they work together:**
+
+1. Student clicks the named link (e.g., "Class notes on GitHub") in the exam interface
+2. Browser opens the top URL (e.g., `https://github.com/sit-dia/dia-notes`)
+3. Student can navigate within the authorized address pattern (e.g., `https://github.com/sit-dia/dia-notes/chapter1/notes.md`)
+4. Any attempt to navigate outside the authorized pattern (e.g., `https://github.com/other-repo`) is **blocked**
+
+**Key rules:**
+
+- Do **NOT** put `/**` wildcards in the top URL field -- keep the fields separate
+- The top URL should be an exact, clean URL (the entry point)
+- The bottom field supports wildcards (`/**`) to allow sub-page navigation
+- Add multiple authorized addresses if students need access to different domains (e.g., GitHub + course notes site)
+
+### Example Configuration
+
+To allow students to access class notes on GitHub during a quiz:
+
+- **Name**: "Class notes on GitHub"
+- **URL** (top): `https://github.com/sit-dia/dia-notes`
+- **Authorized address** (bottom): `https://github.com/sit-dia/dia-notes/**`
+
+This lets students browse all pages under `dia-notes` but blocks access to any other GitHub repository.
+
+### xSITe Quiz Editing Common Issues
+
+If you are editing Examena quizzes on SIT's xSITe (D2L Brightspace), be aware of these interface quirks:
+
+1. **Items may be collapsed in Unit sections**: On the Content page, items within a "Unit" section may be collapsed by default. Expand the Unit section to reveal all items -- quizzes are not missing, just hidden.
+
+2. **Do NOT edit availability settings in the default edit view**: Clicking "Edit" on a quiz from the Content page opens what appears to be the standard xSITe quiz editing interface. This view displays empty availability and timing settings that do **not** correspond to the actual quiz settings. Editing them here can cause confusion -- use the proper quiz editor instead.
+
+3. **Use "Open in New Window" for Examena quizzes**: To access the actual Examena editing interface (for proctoring settings, URL whitelisting, etc.), click the **"Open in New Window"** button within the quiz. The inline editing view does not expose the full Examena configuration.
+
+4. **Both xSITe and Examena items must be set to visible**: For students to access the quiz, both the xSITe content item and the Examena activity must be visible. If either is hidden, students cannot reach the quiz.
+
+5. **Students must launch Examena from xSITe**: Students should **not** attempt to log in to Examena directly -- it will not work. They must click the Examena item link from within xSITe to launch the quiz.
 
 ## Compatibility
 
@@ -238,57 +293,6 @@ The test suite covers:
 - **Test Isolation**: Tests don't depend on each other, clean up after themselves
 - **Clear Naming**: Test names describe what they test
 - **Documentation**: Docstrings explain the purpose of each test class
-
-## Examena Proctoring Setup Guide
-
-If your institution uses [Examena](https://www.examena.com/) for online proctoring, this section will help you configure it alongside your D2L quizzes.
-
-> This guide is derived from Examena's instructor documentation with additional practical notes from real-world usage.
-
-### Prerequisites
-
-- A D2L Brightspace (xSITe or equivalent) course with a quiz already created
-- Examena instructor access (provided by your institution)
-- **Important**: On macOS, use **Chrome** to create Examena proctoring activities. Safari does not load the quiz configuration properly when creating an Examena activity from the D2L Content page.
-
-### Creating an Examena-Proctored Quiz
-
-1. In your D2L course, go to **Content** and create a new module (or select an existing one)
-2. Click **Add Existing Activities** > **External Learning Tools** > **Examena**
-3. Configure the Examena activity with your quiz settings (duration, allowed resources, etc.)
-
-### Configuring Allowed Domains
-
-The Examena "Authorized Resources" configuration has two fields that serve different purposes:
-
-| Field | Purpose | Example |
-|-------|---------|---------|
-| **URL** (top field, with Name) | The display link students see and click in the exam interface -- the "front door" | `https://github.com/sit-dia/dia-notes` |
-| **Authorized address to redirect** (bottom field) | The security whitelist controlling which URLs students can visit after clicking -- the "allowed rooms" | `https://github.com/sit-dia/dia-notes/**` |
-
-**How they work together:**
-
-1. Student clicks the named link (e.g., "Class notes on GitHub") in the exam interface
-2. Browser opens the top URL (e.g., `https://github.com/sit-dia/dia-notes`)
-3. Student can navigate within the authorized address pattern (e.g., `https://github.com/sit-dia/dia-notes/chapter1/notes.md`)
-4. Any attempt to navigate outside the authorized pattern (e.g., `https://github.com/other-repo`) is **blocked**
-
-**Key rules:**
-
-- Do **NOT** put `/**` wildcards in the top URL field -- keep the fields separate
-- The top URL should be an exact, clean URL (the entry point)
-- The bottom field supports wildcards (`/**`) to allow sub-page navigation
-- Add multiple authorized addresses if students need access to different domains (e.g., GitHub + course notes site)
-
-### Example Configuration
-
-To allow students to access class notes on GitHub during a quiz:
-
-- **Name**: "Class notes on GitHub"
-- **URL** (top): `https://github.com/sit-dia/dia-notes`
-- **Authorized address** (bottom): `https://github.com/sit-dia/dia-notes/**`
-
-This lets students browse all pages under `dia-notes` but blocks access to any other GitHub repository.
 
 ## License
 
