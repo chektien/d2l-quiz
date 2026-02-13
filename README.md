@@ -48,7 +48,7 @@ python3 gen_quiz_csv.py quiz.md -v -o output.csv
 
 ### Question Structure
 
-```markdown
+````markdown
 # Quiz Title (N Questions)
 
 ---
@@ -126,7 +126,7 @@ B. Something else
 | Topic B | 3 |
 
 **Total: 8 Questions**
-```
+````
 
 ### Format Specifications
 
@@ -135,7 +135,7 @@ B. Something else
 - **Correct Answers**: Two-line format:
   - `> Correct Answer: X. Answer text` or `> Correct Answers: A, B, C`
   - `> Overall Feedback: Explanation of why this is correct`
-- **Code blocks**: Use triple backticks with optional language: ```typescript
+- **Code blocks**: Use fenced code blocks with an optional language tag (for example, triple backticks followed by `typescript`)
 - **Short Answer**: Include `**Short Answer Question:**` in the question text
 - **End marker**: Questions section ends at `## Learning Objectives` header
 
