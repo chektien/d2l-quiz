@@ -61,7 +61,9 @@ class TestParseQuestion(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result["num"], 1)
         self.assertEqual(result["type"], "MC")
-        self.assertEqual(result["title"], "Variables: Assignment")
+        self.assertEqual(
+            result["title"], ""
+        )  # titles intentionally left blank (af50c48)
         self.assertEqual(len(result["options"]), 4)
         self.assertEqual(
             result["correct_explanation"], "The variable x is assigned the value 5."

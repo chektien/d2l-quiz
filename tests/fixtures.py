@@ -121,7 +121,7 @@ C. Option 3
 EXPECTED_MC_RESULTS = {
     "type": "MC",
     "num": 1,
-    "title": "Variables: Assignment",
+    "title": "",  # titles intentionally left blank since af50c48
     "correct_letter": "B",
     "option_count": 4,
 }
@@ -129,7 +129,7 @@ EXPECTED_MC_RESULTS = {
 EXPECTED_MS_RESULTS = {
     "type": "MS",
     "num": 2,
-    "title": "Data Types: Collections",
+    "title": "",  # titles intentionally left blank since af50c48
     "correct_letters": ["A", "B", "D"],
     "option_count": 4,
 }
@@ -137,7 +137,7 @@ EXPECTED_MS_RESULTS = {
 EXPECTED_SA_RESULTS = {
     "type": "SA",
     "num": 3,
-    "title": "Functions: Keywords",
+    "title": "",  # titles intentionally left blank since af50c48
     "short_answer": "def",
     "option_count": 0,
 }

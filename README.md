@@ -18,7 +18,7 @@ A Python tool to convert quiz questions from Markdown format to D2L Brightspace 
 No installation required. Just download the script and run with Python 3.6+:
 
 ```bash
-python3 gen-quiz-csv.py input.md -o output.csv
+python3 gen_quiz_csv.py input.md -o output.csv
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ python3 gen-quiz-csv.py input.md -o output.csv
 ### Basic Usage
 
 ```bash
-python3 gen-quiz-csv.py example-quiz.md -o quiz-d2l.csv
+python3 gen_quiz_csv.py example-quiz.md -o quiz-d2l.csv
 ```
 
 See `example-quiz.md` for a complete working example with all question types.
@@ -35,13 +35,13 @@ See `example-quiz.md` for a complete working example with all question types.
 
 ```bash
 # Specify course code for question IDs
-python3 gen-quiz-csv.py quiz.md -c CSD3121 -o output.csv
+python3 gen_quiz_csv.py quiz.md -c CSD3121 -o output.csv
 
 # Leave title fields blank (for LMS configurations that don't use titles)
-python3 gen-quiz-csv.py quiz.md --no-titles -o output.csv
+python3 gen_quiz_csv.py quiz.md --no-titles -o output.csv
 
 # Verbose output for debugging
-python3 gen-quiz-csv.py quiz.md -v -o output.csv
+python3 gen_quiz_csv.py quiz.md -v -o output.csv
 ```
 
 ## Markdown Format
