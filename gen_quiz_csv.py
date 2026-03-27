@@ -28,6 +28,13 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
+VALID_MS_SCORING = {
+    "AllOrNothing",
+    "RightAnswers",
+    "RightMinusWrong",
+    "CorrectAnswersLimitedSelections",
+}
+
 
 def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
     """Parse a single question block into structured data."""
@@ -43,6 +50,7 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
     is_short_answer = False
     in_code_block = False
     code_block_content = []
+    scoring_mode = None
 
     for line in lines:
         stripped = line.strip()
@@ -112,6 +120,12 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
             correct_explanation = feedback_match.group(1).strip()
             continue
 
+        # Parse optional italic metadata line for multi-select scoring
+        scoring_match = re.match(r"^\*Scoring:\s*([A-Za-z]+)\*\s*$", stripped)
+        if scoring_match:
+            scoring_mode = scoring_match.group(1).strip()
+            continue
+
         # Parse option lines: A. option text, B. option text, etc.
         option_match = re.match(r"^([A-G])\.\s*(.+)$", stripped)
         if option_match:
@@ -155,6 +169,19 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
     else:
         q_type = "MC"  # Multiple Choice
 
+    if q_type == "MS":
+        if scoring_mode and scoring_mode not in VALID_MS_SCORING:
+            valid_values = ", ".join(sorted(VALID_MS_SCORING))
+            raise ValueError(
+                "Question {} has invalid multi-select scoring value '{}'. "
+                "Supported values: {}".format(
+                    question_num, scoring_mode, valid_values
+                )
+            )
+        scoring_mode = scoring_mode or "RightMinusWrong"
+    else:
+        scoring_mode = ""
+
     # For short answer questions, use the short_answer_text as the answer
     # If no Overall Feedback was provided, fall back to short_answer_text
     if q_type == "SA" and short_answer_text:
@@ -170,6 +197,7 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
         "options": options,
         "correct_explanation": correct_explanation,
         "short_answer": short_answer_text if q_type == "SA" else "",
+        "scoring": scoring_mode,
     }
 
 
@@ -317,7 +345,7 @@ def write_d2l_csv(
                     writer.writerow(["Option", score, opt["text"], opt_html, ""])
 
             elif q["type"] == "MS":
-                writer.writerow(["Scoring", "RightAnswers", "", "", ""])
+                writer.writerow(["Scoring", q["scoring"], "", "", ""])
                 for opt in q["options"]:
                     score = "1" if opt["correct"] else "0"
                     opt_html = (
@@ -379,7 +407,11 @@ def main():
         sys.exit(1)
 
     # Parse questions
-    questions = parse_quiz_file(args.input)
+    try:
+        questions = parse_quiz_file(args.input)
+    except ValueError as exc:
+        print("Error: {}".format(exc), file=sys.stderr)
+        sys.exit(1)
 
     if not questions:
         print("No questions found in the input file")
@@ -411,6 +443,10 @@ def main():
             "SA": "Short Answer",
         }.get(t, t)
         print(f"  {type_name}: {count}")
+
+    print("\nManual follow-up:")
+    print("  Answer-order randomization is not supported by CSV import.")
+    print("  Question-order randomization is a quiz-level Brightspace setting.")
 
 
 if __name__ == "__main__":

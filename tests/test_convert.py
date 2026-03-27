@@ -18,13 +18,19 @@ import unittest
 import tempfile
 import os
 import sys
+import csv
 from pathlib import Path
 
 # Add parent directory to path to import the module
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from gen_quiz_csv import parse_question, parse_quiz_file, format_question_text
-from fixtures import (
+from gen_quiz_csv import (
+    parse_question,
+    parse_quiz_file,
+    format_question_text,
+    write_d2l_csv,
+)
+from tests.fixtures import (
     SAMPLE_MC_QUESTION,
     SAMPLE_MS_QUESTION,
     SAMPLE_SA_QUESTION,
@@ -96,10 +102,77 @@ class TestParseQuestion(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result["type"], "MS")
         self.assertEqual(len(result["options"]), 4)
+        self.assertEqual(result["scoring"], "RightMinusWrong")
 
         # Check multiple correct options
         correct_options = [o["letter"] for o in result["options"] if o["correct"]]
         self.assertEqual(sorted(correct_options), ["A", "B", "D"])
+
+    def test_parse_multi_select_with_explicit_scoring(self):
+        """Test parsing explicit multi-select scoring metadata."""
+        lines = [
+            "## Security: Principles",
+            "Which principles apply here?",
+            "",
+            "*Scoring: CorrectAnswersLimitedSelections*",
+            "",
+            "A. Least privilege",
+            "B. Defense in depth",
+            "C. Security through obscurity only",
+            "",
+            "> Correct Answers: A, B",
+            "> Overall Feedback: Least privilege and defense in depth are applicable.",
+        ]
+
+        result = parse_question(lines, 2)
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result["type"], "MS")
+        self.assertEqual(result["scoring"], "CorrectAnswersLimitedSelections")
+
+    def test_ignore_scoring_metadata_for_non_multi_select(self):
+        """Test scoring metadata is ignored on non-multi-select questions."""
+        lines = [
+            "## Variables: Assignment",
+            "What is the value of x after: x = 5",
+            "",
+            "*Scoring: AllOrNothing*",
+            "",
+            "A. 3",
+            "B. 5",
+            "",
+            "> Correct Answer: B. 5",
+            "> Overall Feedback: The variable x is assigned the value 5.",
+        ]
+
+        result = parse_question(lines, 1)
+
+        self.assertIsNotNone(result)
+        self.assertEqual(result["type"], "MC")
+        self.assertEqual(result["scoring"], "")
+
+    def test_invalid_multi_select_scoring_raises_clear_error(self):
+        """Test invalid multi-select scoring values fail clearly."""
+        lines = [
+            "## Data Types: Collections",
+            "Which are valid Python data types?",
+            "",
+            "*Scoring: PartialCredit*",
+            "",
+            "A. list",
+            "B. dictionary",
+            "C. array (built-in)",
+            "D. tuple",
+            "",
+            "> Correct Answers: A, B, D",
+            "> Overall Feedback: list, dict, and tuple are built-in. array requires import.",
+        ]
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "Question 7 has invalid multi-select scoring value 'PartialCredit'",
+        ):
+            parse_question(lines, 7)
 
     def test_parse_short_answer(self):
         """Test parsing a short answer question."""
@@ -316,6 +389,45 @@ Nothing here.
         self.test_file.write_text(content)
         questions = parse_quiz_file(str(self.test_file))
         self.assertEqual(len(questions), 0)
+
+
+class TestWriteD2LCsv(unittest.TestCase):
+    """Tests for D2L CSV output generation."""
+
+    def setUp(self):
+        self.temp_dir = tempfile.mkdtemp()
+        self.output_file = Path(self.temp_dir) / "output.csv"
+
+    def tearDown(self):
+        if self.output_file.exists():
+            self.output_file.unlink()
+        os.rmdir(self.temp_dir)
+
+    def test_write_multi_select_scoring_to_csv(self):
+        """Test writing explicit multi-select scoring to CSV."""
+        question = parse_question(
+            [
+                "## Security: Principles",
+                "Which principles apply here?",
+                "",
+                "*Scoring: AllOrNothing*",
+                "",
+                "A. Least privilege",
+                "B. Defense in depth",
+                "C. Security through obscurity only",
+                "",
+                "> Correct Answers: A, B",
+                "> Overall Feedback: Least privilege and defense in depth are applicable.",
+            ],
+            1,
+        )
+
+        write_d2l_csv([question], str(self.output_file), "TEST")
+
+        with self.output_file.open(newline="", encoding="utf-8") as handle:
+            rows = list(csv.reader(handle))
+
+        self.assertIn(["Scoring", "AllOrNothing", "", "", ""], rows)
 
 
 class TestEdgeCases(unittest.TestCase):

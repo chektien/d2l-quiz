@@ -110,6 +110,8 @@ For multi-select questions:
 
 **Which options apply? (Select all that apply)**
 
+*Scoring: RightMinusWrong*
+
 A. Option one
 B. Option two
 C. Option three
@@ -170,9 +172,14 @@ B. Something else
 - **Correct Answers**: Two-line format:
   - `> Correct Answer: X. Answer text` or `> Correct Answers: A, B, C`
   - `> Overall Feedback: Explanation of why this is correct`
+- **Multi-Select scoring**: Optional italic metadata line inside a multi-select question block: `*Scoring: RightMinusWrong*`
+- **Multi-Select default**: If no scoring metadata is provided, multi-select questions default to `RightMinusWrong` for backward compatibility
+- **Supported Multi-Select scoring values**: `AllOrNothing`, `RightAnswers`, `RightMinusWrong`, `CorrectAnswersLimitedSelections`
 - **Code blocks**: Use fenced code blocks with an optional language tag (for example, triple backticks followed by `typescript`)
 - **Short Answer**: Include `**Short Answer Question:**` in the question text
 - **End marker**: Questions section ends at `## Learning Objectives` header
+
+If scoring metadata appears on a non-multi-select question, it is ignored.
 
 ## CSV Output Format
 
@@ -191,6 +198,8 @@ Option,0,Third option,,,
 Feedback,"Explanation of correct answer",,,
 ```
 
+For multi-select questions, the CSV output includes a `Scoring` row using the explicit markdown value when provided, otherwise `RightMinusWrong`.
+
 ## Options
 
 | Option | Description |
@@ -206,6 +215,8 @@ Feedback,"Explanation of correct answer",,,
 - **HTML Rendering**: D2L instances vary in HTML support. The script adds `HTML` indicator column when HTML tags are present, but rendering behavior may differ.
 - **Code Syntax Highlighting**: The script preserves code formatting with monospace fonts and background colors, but language-specific syntax highlighting is not supported in D2L CSV imports.
 - **Images**: Images referenced in quiz questions (e.g., `![alt](image.png)`) are **not included** in the CSV export due to limitations of the D2L CSV import format. After importing the CSV into D2L, you must manually upload all images to the D2L question library and re-link them in each question.
+- **Answer-order randomization**: Brightspace answer randomization cannot be specified through the current CSV import format and must be enabled manually after import.
+- **Question-order randomization**: Brightspace question-order randomization is a quiz-level setting, not a question-import CSV field, so it must be configured manually after import.
 
 ## Examena Proctoring Setup Guide
 
