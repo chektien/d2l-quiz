@@ -214,6 +214,7 @@ For multi-select questions, the CSV output includes a `Scoring` row using the ex
 
 - **HTML Rendering**: D2L instances vary in HTML support. The script adds `HTML` indicator column when HTML tags are present, but rendering behavior may differ.
 - **Code Syntax Highlighting**: The script preserves code formatting with monospace fonts and background colors, but language-specific syntax highlighting is not supported in D2L CSV imports.
+- **Import location**: In Brightspace quiz editing, use **Add Existing -> Upload a File** to import the generated CSV.
 - **Images**: Images referenced in quiz questions (e.g., `![alt](image.png)`) are **not included** in the CSV export due to limitations of the D2L CSV import format. After importing the CSV into D2L, you must manually upload all images to the D2L question library and re-link them in each question. The CLI now prints a post-conversion checklist showing which question references which image path so the follow-up work is explicit.
 - **Answer-order randomization**: Brightspace answer randomization cannot be specified through the current CSV import format and must be enabled manually after import.
 - **Question-order randomization**: Brightspace question-order randomization is a quiz-level setting, not a question-import CSV field, so it must be configured manually after import.

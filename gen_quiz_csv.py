@@ -88,7 +88,7 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
         # to keep the xSite short description field empty
         header_match = re.match(r"^##\s*(.+)$", stripped)
         if header_match:
-            display_label = header_match.group(1).strip()
+            display_label = re.sub(r"^\d+\.\s*", "", header_match.group(1).strip())
             # Skip the header line - don't use it as D2L title
             continue
 
