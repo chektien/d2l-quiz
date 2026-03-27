@@ -260,6 +260,19 @@ class TestFormatQuestionText(unittest.TestCase):
         self.assertIn("<code>print()</code>", result)
         self.assertNotIn("`", result)
 
+    def test_format_angle_bracket_link(self):
+        """Test converting angle-bracket URLs to HTML anchors."""
+        text = "Reference: <https://example.com/resource>"
+        result = format_question_text(text)
+        self.assertIn('<a href="https://example.com/resource">https://example.com/resource</a>', result)
+
+    def test_format_markdown_link(self):
+        """Test converting markdown links to HTML anchors."""
+        text = "See [example](https://example.com/resource) for details"
+        result = format_question_text(text)
+        self.assertIn('<a href="https://example.com/resource">example</a>', result)
+
+
     def test_format_code_block(self):
         """Test converting code blocks to HTML with proper formatting."""
         text = "```python\nx = 5\nprint(x)\n```"

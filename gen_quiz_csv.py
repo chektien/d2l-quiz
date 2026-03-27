@@ -287,6 +287,20 @@ def format_question_text(text: str) -> str:
     # Convert markdown bold **text** to HTML <strong>
     result = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", result)
 
+    # Convert markdown links [text](url) to HTML anchors (but not images)
+    result = re.sub(
+        r"(?<!!)\[([^\]]+)\]\((https?://[^)]+)\)",
+        r'<a href="\2">\1</a>',
+        result,
+    )
+
+    # Convert angle-bracket autolinks <https://...> to HTML anchors
+    result = re.sub(
+        r"<(https?://[^>]+)>",
+        r'<a href="\1">\1</a>',
+        result,
+    )
+
     # Convert markdown italic *text* to HTML <em> (but not already processed bold)
     result = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<em>\1</em>", result)
 
