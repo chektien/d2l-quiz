@@ -169,8 +169,18 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
     while question_text_lines and question_text_lines[-1] == "":
         question_text_lines.pop()
 
+    # Collapse repeated blank lines, which can happen after skipping authoring markers
+    collapsed_lines = []
+    previous_blank = False
+    for qline in question_text_lines:
+        is_blank = qline == ""
+        if is_blank and previous_blank:
+            continue
+        collapsed_lines.append(qline)
+        previous_blank = is_blank
+
     # Build question text
-    question_text = "\n".join(question_text_lines).strip()
+    question_text = "\n".join(collapsed_lines).strip()
 
     if not question_text:
         return None
