@@ -1,6 +1,6 @@
 # D2L Quiz Markdown Converter
 
-A Python tool to convert quiz questions from Markdown format to D2L Brightspace CSV import format.
+A Python tool to convert quiz questions from Markdown format to D2L Brightspace CSV import format, with optional printable PDF export for paper-based quizzes.
 
 > **Note**: Originally developed for **Singapore Institute of Technology (SIT)'s xSITe LMS** platform. While it follows D2L Brightspace CSV format standards, some features (like HTML handling) may behave differently on other D2L instances. Use with caution and test thoroughly on your specific LMS.
 
@@ -12,13 +12,21 @@ A Python tool to convert quiz questions from Markdown format to D2L Brightspace 
 - HTML formatting support with automatic HTML indicator
 - Optional title inclusion/exclusion
 - Command-line interface for easy automation
+- **Printable PDF export** for paper-based quizzes with visual MC/MS/SA distinction
 
 ## Installation
 
-No installation required. Just download the script and run with Python 3.6+:
+**CSV export** (no external dependencies):
 
 ```bash
 python3 gen_quiz_csv.py input.md -o output.csv
+```
+
+**PDF export** requires [PyMuPDF](https://pymupdf.readthedocs.io/):
+
+```bash
+pip install pymupdf
+python3 gen_quiz_pdf.py input.md -o quiz-printable.pdf
 ```
 
 ## Usage
@@ -43,6 +51,27 @@ python3 gen_quiz_csv.py quiz.md --no-titles -o output.csv
 # Verbose output for debugging
 python3 gen_quiz_csv.py quiz.md -v -o output.csv
 ```
+
+### Printable PDF Export
+
+Generate a print-ready PDF from quiz markdown. The PDF visually distinguishes question types:
+- **Multiple Choice (MC)**: options marked with radio circles (○)
+- **Multi-Select (MS)**: options marked with checkboxes (☐) and a bold "Select all that apply" label
+- **Short Answer (SA)**: blank lines for handwritten answers
+
+```bash
+# Generate printable PDF
+python3 gen_quiz_pdf.py example-quiz.md -o quiz-printable.pdf
+
+# Verbose output
+python3 gen_quiz_pdf.py quiz.md -o output.pdf -v
+```
+
+| Option | Description |
+|--------|-------------|
+| `input` | Input Markdown file path (required) |
+| `-o, --output` | Output PDF file path (default: quiz-printable.pdf) |
+| `-v, --verbose` | Print detailed parsing information |
 
 ## Markdown Format
 
