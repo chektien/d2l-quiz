@@ -249,14 +249,14 @@ The Examena "Authorized Resources" configuration has two fields that serve diffe
 
 | Field | Purpose | Example |
 |-------|---------|---------|
-| **URL** (top field, with Name) | The display link students see and click in the exam interface -- the "front door" | `https://github.com/sit-dia/dia-notes` |
-| **Authorized address to redirect** (bottom field) | The security whitelist controlling which URLs students can visit after clicking -- the "allowed rooms" | `https://github.com/sit-dia/dia-notes/**` |
+| **URL** (top field, with Name) | The display link students see and click in the exam interface -- the "front door" | `https://github.com/your-org/course-notes` |
+| **Authorized address to redirect** (bottom field) | The security whitelist controlling which URLs students can visit after clicking -- the "allowed rooms" | `https://github.com/your-org/course-notes/**` |
 
 **How they work together:**
 
 1. Student clicks the named link (e.g., "Class notes on GitHub") in the exam interface
-2. Browser opens the top URL (e.g., `https://github.com/sit-dia/dia-notes`)
-3. Student can navigate within the authorized address pattern (e.g., `https://github.com/sit-dia/dia-notes/chapter1/notes.md`)
+2. Browser opens the top URL (e.g., `https://github.com/your-org/course-notes`)
+3. Student can navigate within the authorized address pattern (e.g., `https://github.com/your-org/course-notes/chapter1/notes.md`)
 4. Any attempt to navigate outside the authorized pattern (e.g., `https://github.com/other-repo`) is **blocked**
 
 **Key rules:**
@@ -271,10 +271,10 @@ The Examena "Authorized Resources" configuration has two fields that serve diffe
 To allow students to access class notes on GitHub during a quiz:
 
 - **Name**: "Class notes on GitHub"
-- **URL** (top): `https://github.com/sit-dia/dia-notes`
-- **Authorized address** (bottom): `https://github.com/sit-dia/dia-notes/**`
+- **URL** (top): `https://github.com/your-org/course-notes`
+- **Authorized address** (bottom): `https://github.com/your-org/course-notes/**`
 
-This lets students browse all pages under `dia-notes` but blocks access to any other GitHub repository.
+This lets students browse all pages under `course-notes` but blocks access to any other GitHub repository.
 
 ### xSITe Quiz Editing Common Issues
 
