@@ -19,11 +19,14 @@ import tempfile
 import os
 import sys
 import csv
+from io import StringIO
+from contextlib import redirect_stdout
 from pathlib import Path
 
 # Add parent directory to path to import the module
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import gen_quiz_csv
 from gen_quiz_csv import (
     parse_question,
     parse_quiz_file,
@@ -389,6 +392,46 @@ Nothing here.
         self.test_file.write_text(content)
         questions = parse_quiz_file(str(self.test_file))
         self.assertEqual(len(questions), 0)
+
+
+class TestManualFollowUpOutput(unittest.TestCase):
+    """Tests for CLI manual follow-up reminders."""
+
+    def test_image_followup_lists_question_and_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            quiz_path = Path(temp_dir) / "quiz.md"
+            quiz_path.write_text(
+                """## Visual: Avatar Mirror
+*Reference: Example*
+
+![Mirror](../images/avatar.jpg)
+
+What is shown?
+
+A. One
+B. Two
+
+> Correct Answer: A
+> Overall Feedback: Because.
+
+## Learning Objectives Covered
+""",
+                encoding="utf-8",
+            )
+            output_path = Path(temp_dir) / "out.csv"
+            argv_backup = sys.argv[:]
+            try:
+                sys.argv = ["gen_quiz_csv.py", str(quiz_path), "-o", str(output_path)]
+                buf = StringIO()
+                with redirect_stdout(buf):
+                    gen_quiz_csv.main()
+                stdout = buf.getvalue()
+            finally:
+                sys.argv = argv_backup
+
+            self.assertIn("Images are not embedded in the CSV export", stdout)
+            self.assertIn("Q01 - Visual: Avatar Mirror", stdout)
+            self.assertIn("../images/avatar.jpg", stdout)
 
 
 class TestWriteD2LCsv(unittest.TestCase):

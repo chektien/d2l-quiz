@@ -47,6 +47,8 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
     correct_explanation = ""
     short_answer_text = ""  # For SA questions: the actual answer
     title = ""
+    display_label = ""
+    image_refs = []
     is_short_answer = False
     in_code_block = False
     code_block_content = []
@@ -86,7 +88,8 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
         # to keep the xSite short description field empty
         header_match = re.match(r"^##\s*(.+)$", stripped)
         if header_match:
-            # Skip the header line - don't use it as title
+            display_label = header_match.group(1).strip()
+            # Skip the header line - don't use it as D2L title
             continue
 
         # Check for short answer indicator
@@ -132,6 +135,13 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
             letter = option_match.group(1)
             text = option_match.group(2).strip()
             options.append({"letter": letter, "text": text, "correct": False})
+            continue
+
+        # Capture markdown image references for post-import follow-up
+        image_match = re.match(r"!\[(.*?)\]\((.*?)\)", stripped)
+        if image_match:
+            image_refs.append({"alt": image_match.group(1).strip(), "path": image_match.group(2).strip()})
+            question_text_lines.append(line)
             continue
 
         # Include reference lines in question text (converted to italic)
@@ -193,11 +203,13 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
         "num": question_num,
         "type": q_type,
         "title": title,
+        "display_label": display_label,
         "text": question_text,
         "options": options,
         "correct_explanation": correct_explanation,
         "short_answer": short_answer_text if q_type == "SA" else "",
         "scoring": scoring_mode,
+        "image_refs": image_refs,
     }
 
 
@@ -447,6 +459,17 @@ def main():
     print("\nManual follow-up:")
     print("  Answer-order randomization is not supported by CSV import.")
     print("  Question-order randomization is a quiz-level Brightspace setting.")
+
+    image_followups = []
+    for q in questions:
+        for image in q.get("image_refs", []):
+            image_followups.append((q["num"], q.get("display_label", ""), image["path"]))
+
+    if image_followups:
+        print("  Images are not embedded in the CSV export. After importing into D2L, upload and re-link:")
+        for qnum, label, path in image_followups:
+            label_text = f" - {label}" if label else ""
+            print(f"    Q{qnum:02d}{label_text}: upload `{path}` and re-link it in this question.")
 
 
 if __name__ == "__main__":
