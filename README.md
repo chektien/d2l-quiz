@@ -70,8 +70,14 @@ python3 gen_quiz_pdf.py quiz.md -o output.pdf -v
 | Option | Description |
 |--------|-------------|
 | `input` | Input Markdown file path (required) |
-| `-o, --output` | Output PDF file path (default: quiz-printable.pdf) |
+| `-o, --output` | Output PDF file path (default: `quiz-printable.pdf`) |
 | `-v, --verbose` | Print detailed parsing information |
+
+The output file path is specified by the caller with `-o`. It is recommended to write generated PDFs to a dedicated output directory outside the repository to avoid committing generated files:
+
+```bash
+python3 gen_quiz_pdf.py quiz.md -o ~/quiz-output/midterm-printable.pdf
+```
 
 ## Markdown Format
 
