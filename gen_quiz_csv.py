@@ -457,6 +457,7 @@ def main():
         print(f"  {type_name}: {count}")
 
     print("\nManual follow-up:")
+    print("  In Brightspace quiz editing, use Add Existing -> Upload a File to import the generated CSV.")
     print("  Answer-order randomization is not supported by CSV import.")
     print("  Question-order randomization is a quiz-level Brightspace setting.")
 
