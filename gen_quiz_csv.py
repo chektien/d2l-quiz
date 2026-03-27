@@ -163,6 +163,12 @@ def parse_question(lines: List[str], question_num: int) -> Optional[dict]:
         if opt["letter"] in correct_letters:
             opt["correct"] = True
 
+    # Trim leading/trailing blank lines that can be left behind by authoring markers
+    while question_text_lines and question_text_lines[0] == "":
+        question_text_lines.pop(0)
+    while question_text_lines and question_text_lines[-1] == "":
+        question_text_lines.pop()
+
     # Build question text
     question_text = "\n".join(question_text_lines).strip()
 

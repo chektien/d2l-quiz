@@ -199,6 +199,7 @@ class TestParseQuestion(unittest.TestCase):
             result["correct_explanation"],
             "The def keyword is used to define functions in Python.",
         )
+        self.assertEqual(result["text"], "What keyword defines a function in Python?")
 
     def test_parse_with_code_block(self):
         """Test parsing question with code block."""
